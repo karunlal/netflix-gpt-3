@@ -1,7 +1,21 @@
 import Header from './Header'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
+import { checkValidateData } from '../utils/validate'
 const Login = () => {
   const [isSignInForm, setIsSignInForm] = useState(true)
+  const [errorMessage, setErrorMessage] = useState()
+  const name = useRef(null)
+  const email = useRef(null)
+  const password = useRef(null)
+
+  const handleButtonClick = () => {
+    const message = checkValidateData(
+      email.current.value,
+      password.current.value
+    )
+    setErrorMessage(message)
+  }
+
   const toggleSignInForm = () => {
     setIsSignInForm((prevState) => !prevState)
     console.log(isSignInForm)
@@ -25,24 +39,31 @@ const Login = () => {
         </h1>
         {!isSignInForm && (
           <input
+            ref={name}
             type="name"
             placeholder="Name"
             className="p-4 my-4 w-full bg-gray-700"
           />
         )}
         <input
+          ref={email}
           type="text"
           placeholder="Email address"
           className="p-4 my-4 w-full bg-gray-700"
         />
         <input
+          ref={password}
           type="password"
           placeholder="password"
           className="p-4 my-4 w-full bg-gray-700"
         />
-        <button className="p-4 my-6 bg-red-700 w-full">
+        <button
+          className="p-4 my-6 bg-red-700 w-full"
+          onClick={handleButtonClick}
+        >
           {isSignInForm ? 'Sign In' : 'Sign Up'}
         </button>
+        <p className="text-red-500 text-xl font-bold">{errorMessage}</p>
         <p className="py-6 cursor-pointer" onClick={toggleSignInForm}>
           {isSignInForm
             ? 'New to Netflix? Sign Up Now'
